@@ -1,0 +1,50 @@
+plugins {
+    id 'org.jenkins-ci.jpi' version '0.50.0-rc.3'
+}
+
+jenkinsPlugin {
+    jenkinsVersion = '2.414.3'
+}
+
+apply plugin: 'groovy'
+apply plugin: 'idea'
+
+repositories {
+    mavenCentral()
+    maven {
+        url 'https://repo.jenkins-ci.org/releases/'
+    }
+}
+
+dependencies {
+    implementation 'org.checkerframework:checker-qual:3.40.0'
+    implementation 'com.google.j2objc:j2objc-annotations:2.8'
+    implementation 'org.junit.jupiter:junit-jupiter-api:5.10.1'
+    testImplementation 'com.lesfurets:jenkins-pipeline-unit:1.17'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.10.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.10.1'
+}
+
+test {
+    systemProperty 'pipeline.stack.write', project.getProperty('pipeline.stack.write')
+    useJUnitPlatform()
+}
+
+idea {
+    module {
+        sourceDirs += file('src')
+    }
+}
+
+sourceSets {
+    test {
+        groovy {
+            srcDirs = [
+                    'test/src',
+            ]
+        }
+        resources {
+            srcDirs = ['test/resources']
+        }
+    }
+}
